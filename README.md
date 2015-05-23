@@ -1,12 +1,12 @@
 # run_analysis.R
- It does the following steps using the "Human Activity Recognition Using Smartphones Data Set" 
-	1. Merges the training and the test sets to create one data set.
-	2. Extracts only the measurements on the mean and standard deviation for each measurement.
-	3. Uses descriptive activity names to name the activities in the data set
-	4. Appropriately labels the data set with descriptive variable names.
-	5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
- However, my script doesn't do these steps in order for clarity and performance reasons
- It does these steps in the following order: 3, 2, 4, 1, 5
+It does the following steps using the "Human Activity Recognition Using Smartphones Data Set" 
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement.
+3. Uses descriptive activity names to name the activities in the data set
+4. Appropriately labels the data set with descriptive variable names.
+5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+However, my script doesn't do these steps in order for clarity and performance reasons
+It does these steps in the following order: 3, 2, 4, 1, 5
 
 ###Loading Data
 		
