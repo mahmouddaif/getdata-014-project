@@ -8,98 +8,108 @@
  However, my script doesn't do these steps in order for clarity and performance reasons
  It does these steps in the following order: 3, 2, 4, 1, 5
 
-	### Loading Data:
-		```
-		# Load the Training set.
-		dataTrain <- read.table("./UCI HAR Dataset/train/X_train.txt")
+###Loading Data
 		
-		# Load the test set.
-		dataTest <- read.table("./UCI HAR Dataset/test/X_test.txt")
-		```
-	### Step 3:
-		```
-		# Load the activity labels for the training data, and replace their indices by the activity name 1 <- WALKING, 2 <- WALKING_UPSTAIRS and so on.
-		# Give them the column name "labels" which stands for activity labels
+```r
+# Load the Training set.
+dataTrain <- read.table("./UCI HAR Dataset/train/X_train.txt")
+
+# Load the test set.
+dataTest <- read.table("./UCI HAR Dataset/test/X_test.txt")
+```
 		
-		labelsTrain <- read.table("./UCI HAR Dataset/train/y_train.txt")
-		colnames(labelsTrain) <- c("labels")
-		labelsTrain <- mapvalues(labelsTrain$labels, from = c(1, 2, 3, 4, 5, 6), to = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING","STANDING", "LAYING"))
+###Step 3
+```r
+# Load the activity labels for the training data, and replace their indices by the activity name 1 <- WALKING, 2 <- WALKING_UPSTAIRS and so on.
+# Give them the column name "labels" which stands for activity labels
+
+labelsTrain <- read.table("./UCI HAR Dataset/train/y_train.txt")
+colnames(labelsTrain) <- c("labels")
+labelsTrain <- mapvalues(labelsTrain$labels, from = c(1, 2, 3, 4, 5, 6), to = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING","STANDING", "LAYING"))
+
+
+# Load the activity labels for the test data, and replace their indices by the activity name 1 <- WALKING, 2 <- WALKING_UPSTAIRS and so on.
+# Give them the column name "labels" which stands for activity labels
+labelsTest <- read.table("./UCI HAR Dataset/test/y_test.txt")
+colnames(labelsTest) <- c("labels")
+labelsTest <- mapvalues(labelsTest$labels, from = c(1, 2, 3, 4, 5, 6), to = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING","STANDING", "LAYING"))
+
+# Load the subjects for the training data and give them the column name "subjects".
+subjectsTrain <- read.table("./UCI HAR Dataset/train/subject_train.txt")
+colnames(subjectsTrain) <- c("subjects")
+
+# Load the subjects for the test data and give them the column name "subjects".
+subjectsTest <- read.table("./UCI HAR Dataset/test/subject_test.txt")
+colnames(subjectsTest) <- c("subjects")
+
+```
 		
+###Step 2
+	
+```r
+# Extracts only the measurements on the mean and standard deviation for each measurement.
+# Load the features from features.txt
+features <- read.table("./UCI HAR Dataset/features.txt")
+
+# We are only interested in the vector containing the feature names
+featuresVector <- unlist(features$V2)
+
+# get only the indices of the features containing the pattern "-std()" and the pattern "-mean"
+stdFeaturesVector <- grep(pattern="-std()",x=featuresVector, fixed=TRUE)
+meanFeaturesVector <- grep(pattern="-mean()",x=featuresVector,fixed=TRUE)
+meanFeaturesVector <- unlist(meanFeaturesVector)
+stdFeaturesVector <- unlist(stdFeaturesVector)
+
+# Combine both vectors in one vector
+stdAndMean <- rbind(meanFeaturesVector, stdFeaturesVector)
+# Sort the indices in ascending order
+stdAndMean <- sort(stdAndMean)
+
+# Extract the part of the training data that has the mean and standard deviation for each measurement.
+dataTrain <- dataTrain[,stdAndMean]
+```
 		
-		# Load the activity labels for the test data, and replace their indices by the activity name 1 <- WALKING, 2 <- WALKING_UPSTAIRS and so on.
-		# Give them the column name "labels" which stands for activity labels
-		labelsTest <- read.table("./UCI HAR Dataset/test/y_test.txt")
-		colnames(labelsTest) <- c("labels")
-		labelsTest <- mapvalues(labelsTest$labels, from = c(1, 2, 3, 4, 5, 6), to = c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING","STANDING", "LAYING"))
-
-		# Load the subjects for the training data and give them the column name "subjects".
-		subjectsTrain <- read.table("./UCI HAR Dataset/train/subject_train.txt")
-		colnames(subjectsTrain) <- c("subjects")
-
-		# Load the subjects for the test data and give them the column name "subjects".
-		subjectsTest <- read.table("./UCI HAR Dataset/test/subject_test.txt")
-		colnames(subjectsTest) <- c("subjects")
+###Step 4
 		
-		```
-	### Step 2:
-		```
-		# Extracts only the measurements on the mean and standard deviation for each measurement.
-		# Load the features from features.txt
-		features <- read.table("./UCI HAR Dataset/features.txt")
+```r		
+# Rename columns using features names. 
+colnames(dataTrain) <- featuresVector[stdAndMean]
 
-		# We are only interested in the vector containing the feature names
-		featuresVector <- unlist(features$V2)
+# Extract the part of the test data that has the mean and standard deviation for each measurement.
+dataTest <- dataTest[,stdAndMean]
 
-		# get only the indices of the features containing the pattern "-std()" and the pattern "-mean"
-		stdFeaturesVector <- grep(pattern="-std()",x=featuresVector, fixed=TRUE)
-		meanFeaturesVector <- grep(pattern="-mean()",x=featuresVector,fixed=TRUE)
-		meanFeaturesVector <- unlist(meanFeaturesVector)
-		stdFeaturesVector <- unlist(stdFeaturesVector)
+# Rename columns using features names.
+colnames(dataTest) <- featuresVector[stdAndMean]
+```
+		
+###Step 1
+		
+```r
+# Merges the training and the test sets to create one data set.
 
-		# Combine both vectors in one vector
-		stdAndMean <- rbind(meanFeaturesVector, stdFeaturesVector)
-		# Sort the indices in ascending order
-		stdAndMean <- sort(stdAndMean)
+# Merge activity labels of the training and test data sets
+labels <- c(labelsTrain,labelsTest)
 
-		# Extract the part of the training data that has the mean and standard deviation for each measurement.
-		dataTrain <- dataTrain[,stdAndMean]
-		```
-		### Step 4:
-		```		
-		# Rename columns using features names. 
-		colnames(dataTrain) <- featuresVector[stdAndMean]
+# Merge subjects of the training and test data sets
+subjects <- rbind(subjectsTrain,subjectsTest)
 
-		# Extract the part of the test data that has the mean and standard deviation for each measurement.
-		dataTest <- dataTest[,stdAndMean]
+# Merge mean and std measurements of the training and test data sets
+data <- rbind(dataTrain, dataTest)
 
-		# Rename columns using features names.
-		colnames(dataTest) <- featuresVector[stdAndMean]
-		```
-		### Step 1:
-		```
-		# Merges the training and the test sets to create one data set.
+#add activity labels and subjects to the measurements to form the complete table
+data$labels <- labels
+data$subjects <- subjects$subjects
+```
 
-		# Merge activity labels of the training and test data sets
-		labels <- c(labelsTrain,labelsTest)
+###Step 5
+		
+```r
+# tidy data set with the average of each variable for each activity and each subject.
+dataSummary <- ddply(data, .(labels,subjects), numcolwise(mean))
 
-		# Merge subjects of the training and test data sets
-		subjects <- rbind(subjectsTrain,subjectsTest)
-
-		# Merge mean and std measurements of the training and test data sets
-		data <- rbind(dataTrain, dataTest)
-
-		#add activity labels and subjects to the measurements to form the complete table
-		data$labels <- labels
-		data$subjects <- subjects$subjects
-		```
-		### Step 5: 
-		```
-		# tidy data set with the average of each variable for each activity and each subject.
-		dataSummary <- ddply(data, .(labels,subjects), numcolwise(mean))
-
-		#writing the tidy dataset into a file
-		write.fwf(x=dataSummary, file = "dataSummary.txt", sep = "\t\t", justify="left", rownames=FALSE)
-		```
+#writing the tidy dataset into a file
+write.fwf(x=dataSummary, file = "dataSummary.txt", sep = "\t\t", justify="left", rownames=FALSE)
+```
 	
 # Dependencies
  The "Human Activity Recognition using Smartphones Data Set"
