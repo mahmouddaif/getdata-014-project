@@ -130,5 +130,5 @@ write.fwf(x=dataSummary, file = "dataSummary.txt", sep = "\t\t", justify="left",
  
  'test/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30.
  
- # CodeBook.md
+# CodeBook.md
  A code book that describes the variables, the data, and any transformations or work performed to clean up the data called
