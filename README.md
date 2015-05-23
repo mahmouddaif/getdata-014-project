@@ -9,15 +9,15 @@
  It does these steps in the following order: 3, 2, 4, 1, 5
 
 	### Loading Data:
-		(((
+		```
 		# Load the Training set.
 		dataTrain <- read.table("./UCI HAR Dataset/train/X_train.txt")
 		
 		# Load the test set.
 		dataTest <- read.table("./UCI HAR Dataset/test/X_test.txt")
-		)))
+		```
 	### Step 3:
-		(((
+		```
 		# Load the activity labels for the training data, and replace their indices by the activity name 1 <- WALKING, 2 <- WALKING_UPSTAIRS and so on.
 		# Give them the column name "labels" which stands for activity labels
 		
@@ -40,9 +40,9 @@
 		subjectsTest <- read.table("./UCI HAR Dataset/test/subject_test.txt")
 		colnames(subjectsTest) <- c("subjects")
 		
-		)))
+		```
 	### Step 2:
-		(((
+		```
 		# Extracts only the measurements on the mean and standard deviation for each measurement.
 		# Load the features from features.txt
 		features <- read.table("./UCI HAR Dataset/features.txt")
@@ -63,9 +63,9 @@
 
 		# Extract the part of the training data that has the mean and standard deviation for each measurement.
 		dataTrain <- dataTrain[,stdAndMean]
-		)))
+		```
 		### Step 4:
-		(((		
+		```		
 		# Rename columns using features names. 
 		colnames(dataTrain) <- featuresVector[stdAndMean]
 
@@ -74,9 +74,9 @@
 
 		# Rename columns using features names.
 		colnames(dataTest) <- featuresVector[stdAndMean]
-		)))
+		```
 		### Step 1:
-		(((
+		```
 		# Merges the training and the test sets to create one data set.
 
 		# Merge activity labels of the training and test data sets
@@ -91,15 +91,15 @@
 		#add activity labels and subjects to the measurements to form the complete table
 		data$labels <- labels
 		data$subjects <- subjects$subjects
-		)))
+		```
 		### Step 5: 
-		(((
+		```
 		# tidy data set with the average of each variable for each activity and each subject.
 		dataSummary <- ddply(data, .(labels,subjects), numcolwise(mean))
 
 		#writing the tidy dataset into a file
 		write.fwf(x=dataSummary, file = "dataSummary.txt", sep = "\t\t", justify="left", rownames=FALSE)
-		)))
+		```
 	
 # Dependencies
  The "Human Activity Recognition using Smartphones Data Set"
