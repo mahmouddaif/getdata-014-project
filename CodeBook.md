@@ -16,6 +16,8 @@ Then we extracted only the features related to the mean or the standard deviatio
 Then we calculated the average of each variable for each activity and each subject.
 
 #Variables
+* subjects: the id of the the 30 subjects from 1-30
+* labels: the labes of the 6 activities ("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING","STANDING", "LAYING")
 * tBodyAcc-XYZ
 * tGravityAcc-XYZ
 * tBodyAccJerk-XYZ
