@@ -15,7 +15,6 @@ Then we extracted only the features related to the mean or the standard deviatio
 Then we calculated the average of each variable for each activity and each subject.
 
 #Variables
-
 tBodyAcc-XYZ
 tGravityAcc-XYZ
 tBodyAccJerk-XYZ
@@ -35,6 +34,5 @@ fBodyGyroMag
 fBodyGyroJerkMag
 
 The set of variables that were estimated from these signals are: 
-
 mean(): Mean value
 std(): Standard deviation
